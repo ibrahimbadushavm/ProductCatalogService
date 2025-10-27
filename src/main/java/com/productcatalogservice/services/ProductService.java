@@ -1,19 +1,23 @@
 package com.productcatalogservice.services;
 
 import com.productcatalogservice.dtos.ProductDto;
+import com.productcatalogservice.exceptions.NotFoundException;
 import com.productcatalogservice.models.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductService {
 
-    public List<ProductDto> getAllProducts();
+    public List<Product> getAllProducts();
 
-    public ProductDto getProductById(Long id);
+    public Optional<Product> getProductById(Long id) throws NotFoundException;
 
-    public ProductDto addProduct(ProductDto name);
+    public Product addProduct(Product product);
 
-    public ProductDto updateProduct(Long productId, ProductDto productDto);
+    public Product updateProduct(Long productId, Product product);
 
-    public ProductDto deleteProduct(Long productId);
+    public Product replaceProduct(Long productId, Product product);
+
+    public Optional<Product> deleteProduct(Long productId) throws NotFoundException;
 }
