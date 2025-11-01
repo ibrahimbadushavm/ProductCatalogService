@@ -1,6 +1,8 @@
 package com.productcatalogservice.services;
 
 import com.productcatalogservice.clients.fakestoreclient.FakeStoreApiClient;
+import com.productcatalogservice.models.Category;
+import com.productcatalogservice.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +15,12 @@ public class FakeStoreCategoryService implements CategoryService {
     private FakeStoreApiClient  fakeStoreApiClient;
 
     @Override
-    public List<String> getAllCategories() {
-        return fakeStoreApiClient.getCategories();
+    public List<Category> getAllCategories() {
+        return null;
+    }
+
+    @Override
+    public List<Product> getAllProductsWithCategory(Long categoryId) {
+        return List.of();
     }
 }

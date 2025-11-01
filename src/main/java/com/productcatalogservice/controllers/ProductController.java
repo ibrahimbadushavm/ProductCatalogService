@@ -6,6 +6,7 @@ import com.productcatalogservice.models.Category;
 import com.productcatalogservice.models.Product;
 import com.productcatalogservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class ProductController {
 
     private ProductService productService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(@Qualifier("storageProductService") ProductService productService) {
         this.productService = productService;
     }
 
@@ -72,13 +73,16 @@ public class ProductController {
 
     private Product fromProductDto(ProductDto productDto) {
         Product product = new Product();
-        product.setId(productDto.getId());
-        product.setCategory(new Category());
-        product.getCategory().setName(productDto.getCategory());
-        product.setPrice(productDto.getPrice());
+        if (productDto.getId() != null) {
+            product.setId(productDto.getId());
+        }
         product.setTitle(productDto.getTitle());
-        product.setImageUrl(productDto.getImage());
         product.setDescription(productDto.getDescription());
+        product.setPrice(productDto.getPrice());
+        product.setImageUrl(productDto.getImage());
+        Category category = new Category();
+        category.setName(productDto.getCategory());
+        product.setCategory(category);
         return product;
     }
 }

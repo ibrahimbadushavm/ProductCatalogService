@@ -8,5 +8,6 @@ import java.util.List;
 @Getter
 @Setter
 public class CategoryDto {
-    private List<String> categories;
+    private String name;
+
 }
