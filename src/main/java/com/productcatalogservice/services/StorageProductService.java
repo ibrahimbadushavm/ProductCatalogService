@@ -1,7 +1,9 @@
 package com.productcatalogservice.services;
 
 import com.productcatalogservice.exceptions.NotFoundException;
+import com.productcatalogservice.models.Category;
 import com.productcatalogservice.models.Product;
+import com.productcatalogservice.repositories.CategoryRepository;
 import com.productcatalogservice.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -13,8 +15,10 @@ import java.util.Optional;
 public class StorageProductService implements ProductService {
 
     private ProductRepository productRepository;
+    private CategoryRepository categoryRepository;
 
-    public StorageProductService(ProductRepository productRepository) {
+    public StorageProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
     }
 
@@ -35,12 +39,18 @@ public class StorageProductService implements ProductService {
 
     @Override
     public Product addProduct(Product product) {
+        Optional<Category> categoryOptional = categoryRepository.findByName(product.getCategory().getName());
+        if (categoryOptional.isPresent()) {
+            product.setCategory(categoryOptional.get());
+        }
         return productRepository.save(product);
     }
 
     @Override
     public Product updateProduct(Long productId, Product product) {
         Optional<Product> productOptional = productRepository.findById(productId);
+        Optional<Category> categoryOptional = categoryRepository.findByName(product.getCategory().getName());
+
         if (productOptional.isPresent()) {
             Product existingProduct = productOptional.get();
             if (product.getTitle() != null) {
@@ -55,7 +65,9 @@ public class StorageProductService implements ProductService {
             if (product.getImageUrl() != null) {
                 existingProduct.setImageUrl(product.getImageUrl());
             }
-            if (product.getCategory() != null) {
+            if (categoryOptional.isPresent()) {
+                product.setCategory(categoryOptional.get());
+            } else {
                 existingProduct.setCategory(product.getCategory());
             }
             return productRepository.save(existingProduct);

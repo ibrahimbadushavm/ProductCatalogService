@@ -15,6 +15,6 @@ import java.util.List;
 public class Category  extends  BasModel{
 
     private String name;
-    @OneToMany(mappedBy = "category",fetch = FetchType.LAZY,cascade ={ CascadeType.REMOVE,CascadeType.MERGE,CascadeType.PERSIST})
+    @OneToMany(mappedBy = "category",fetch = FetchType.LAZY,cascade ={ CascadeType.REMOVE})
     private List<Product> products;
 }

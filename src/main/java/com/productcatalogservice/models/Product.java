@@ -15,7 +15,7 @@ public class Product extends  BasModel{
     private String title;
     private String description;
     private String imageUrl;
-    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     private Category category;
     private Double price;
 }
