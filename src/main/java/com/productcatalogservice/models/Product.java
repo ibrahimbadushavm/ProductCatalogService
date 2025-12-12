@@ -18,4 +18,5 @@ public class Product extends  BasModel{
     @ManyToOne(cascade = CascadeType.ALL)
     private Category category;
     private Double price;
+//    private int quantity;
 }
