@@ -3,9 +3,11 @@ package com.productcatalogservice.dtos;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class ProductDto {
+public class ProductDto  implements Serializable {
     private Long id;
     private String title;
     private Double price;

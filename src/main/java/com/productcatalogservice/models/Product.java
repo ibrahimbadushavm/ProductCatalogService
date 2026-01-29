@@ -7,10 +7,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 
+import java.io.Serializable;
+
 @Setter
 @Getter
 @Entity
-public class Product extends  BasModel{
+public class Product extends  BasModel implements Serializable {
 
     private String title;
     private String description;

@@ -8,7 +8,9 @@ import com.productcatalogservice.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -30,10 +32,14 @@ public class StorageProductService implements ProductService {
 
     @Override
     public Optional<Product> getProductById(Long id) throws NotFoundException {
+//        if(productStorage.containsKey(id)){
+//            return Optional.of(productStorage.get(id));
+//        }
         Optional<Product> productOptional = productRepository.findById(id);
         if (productOptional.isEmpty()) {
             throw new NotFoundException("Product not found");
         }
+//        productStorage.put(id, productOptional.get());
         return productOptional;
     }
 

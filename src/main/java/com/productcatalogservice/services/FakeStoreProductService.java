@@ -2,19 +2,22 @@ package com.productcatalogservice.services;
 
 import com.productcatalogservice.clients.fakestoreclient.FakeStoreApiClient;
 import com.productcatalogservice.clients.fakestoreclient.FakeStoreProductDto;
+import com.productcatalogservice.dtos.ProductDto;
 import com.productcatalogservice.exceptions.NotFoundException;
 import com.productcatalogservice.models.Category;
 import com.productcatalogservice.models.Product;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class FakeStoreProductService implements ProductService {
 
     private FakeStoreApiClient fakeStoreApiClient;
+    @Autowired
+    private RedisTemplate<Long, Object> productsRedisTemplate;
 
     public FakeStoreProductService(FakeStoreApiClient fakeStoreApiClient) {
         this.fakeStoreApiClient = fakeStoreApiClient;
@@ -34,10 +37,15 @@ public class FakeStoreProductService implements ProductService {
 
     @Override
     public Optional<Product> getProductById(Long id) throws NotFoundException {
+        if(productsRedisTemplate.opsForHash().hasKey(id, "PRODUCT")) {
+
+            return Optional.of((Product) productsRedisTemplate.opsForHash().get(id, "PRODUCT"));
+        }
         FakeStoreProductDto productDto = fakeStoreApiClient.getProductById(id);
         if(productDto == null) {
             throw new NotFoundException("Product not found with productId "+id);
         }
+        productsRedisTemplate.opsForHash().put(id, "PRODUCT",fromFakeStoreProductDto(productDto));
         return Optional.of(fromFakeStoreProductDto(productDto)) ;
     }
 
