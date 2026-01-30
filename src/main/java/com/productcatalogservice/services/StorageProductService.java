@@ -6,6 +6,8 @@ import com.productcatalogservice.models.Product;
 import com.productcatalogservice.repositories.CategoryRepository;
 import com.productcatalogservice.repositories.ProductRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -101,5 +103,10 @@ public class StorageProductService implements ProductService {
         }
         productRepository.delete(existingProduct.get());
         return existingProduct;
+    }
+
+    @Override
+    public Page<List<Product>> getProductsPagedHavvingTitleContaining(String title, Integer page, Integer size) {
+        return productRepository.findByTitleContaining(title, PageRequest.of(page, size));
     }
 }

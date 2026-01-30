@@ -17,7 +17,7 @@ public class CategoryController {
 
     private CategoryService categoryService;
 
-    public CategoryController(@Qualifier("fakeStoreCategoryService") CategoryService categoryService) {
+    public CategoryController(@Qualifier("storageCategoryService") CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 

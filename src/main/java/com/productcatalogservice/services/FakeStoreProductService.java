@@ -7,6 +7,7 @@ import com.productcatalogservice.exceptions.NotFoundException;
 import com.productcatalogservice.models.Category;
 import com.productcatalogservice.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +75,11 @@ public class FakeStoreProductService implements ProductService {
             throw new NotFoundException("Product not found with productId "+productId);
         }
         return Optional.of(fromFakeStoreProductDto(fakeStoreProductDto));
+    }
+
+    @Override
+    public Page<List<Product>> getProductsPagedHavvingTitleContaining(String title, Integer page, Integer size) {
+        return null;
     }
 
     private FakeStoreProductDto fromProduct(Product product) {

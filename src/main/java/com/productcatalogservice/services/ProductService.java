@@ -3,6 +3,7 @@ package com.productcatalogservice.services;
 import com.productcatalogservice.dtos.ProductDto;
 import com.productcatalogservice.exceptions.NotFoundException;
 import com.productcatalogservice.models.Product;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +21,6 @@ public interface ProductService {
     public Product replaceProduct(Long productId, Product product);
 
     public Optional<Product> deleteProduct(Long productId) throws NotFoundException;
+
+    public Page<List<Product>> getProductsPagedHavvingTitleContaining(String title, Integer page, Integer size);
 }
