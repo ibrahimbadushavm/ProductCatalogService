@@ -82,6 +82,11 @@ public class FakeStoreProductService implements ProductService {
         return null;
     }
 
+    @Override
+    public Page<List<Product>> searchProducts(String query,Integer page, Integer size) {
+        return null;
+    }
+
     private FakeStoreProductDto fromProduct(Product product) {
         FakeStoreProductDto fakeStoreProductDto = new FakeStoreProductDto();
         fakeStoreProductDto.setId(product.getId());

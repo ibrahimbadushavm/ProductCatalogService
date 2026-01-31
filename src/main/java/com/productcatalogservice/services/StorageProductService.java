@@ -5,15 +5,13 @@ import com.productcatalogservice.models.Category;
 import com.productcatalogservice.models.Product;
 import com.productcatalogservice.repositories.CategoryRepository;
 import com.productcatalogservice.repositories.ProductRepository;
-import jakarta.transaction.Transactional;
+import com.productcatalogservice.repositories.products.ElasticSearchProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -21,10 +19,12 @@ public class StorageProductService implements ProductService {
 
     private ProductRepository productRepository;
     private CategoryRepository categoryRepository;
+    private ElasticSearchProductRepository elasticSearchProductRepository;
 
-    public StorageProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public StorageProductService(ProductRepository productRepository, CategoryRepository categoryRepository,ElasticSearchProductRepository elasticSearchProductRepository) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
+        this.elasticSearchProductRepository=elasticSearchProductRepository;
     }
 
     @Override
@@ -52,7 +52,9 @@ public class StorageProductService implements ProductService {
         if (categoryOptional.isPresent()) {
             product.setCategory(categoryOptional.get());
         }
-        return productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
+        elasticSearchProductRepository.save(savedProduct);
+        return savedProduct;
     }
 
     @Override
@@ -79,7 +81,9 @@ public class StorageProductService implements ProductService {
             } else {
                 existingProduct.setCategory(product.getCategory());
             }
-            return productRepository.save(existingProduct);
+            Product updatedProduct = productRepository.save(existingProduct);
+            elasticSearchProductRepository.save(updatedProduct);
+            return updatedProduct;
         } else {
             return null;
         }
@@ -107,7 +111,12 @@ public class StorageProductService implements ProductService {
     }
 
     @Override
-    public Page<List<Product>> getProductsPagedHavvingTitleContaining(String title, Integer page, Integer size) {
-        return productRepository.findByTitleContaining(title, PageRequest.of(page, size,Sort.by("price").ascending()));
+    public Page<List<Product>> getProductsPagedHavvingTitleContaining(String query, Integer page, Integer size) {
+        return productRepository.findByTitleContaining(query, PageRequest.of(page, size,Sort.by("price").ascending()));
+    }
+
+    @Override
+    public Page<List<Product>> searchProducts(String query,Integer page, Integer size) {
+        return elasticSearchProductRepository.searchProducts(query,PageRequest.of(page,size));
     }
 }

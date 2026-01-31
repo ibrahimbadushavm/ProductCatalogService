@@ -46,8 +46,20 @@ public class ProductController {
     }
 
     @GetMapping("/title-containing")
-    public PageImpl<List<ProductDto>> getProductsPagedHavvingTitleContaining(@RequestParam String title, @RequestParam Integer page, @RequestParam Integer size, Principal principal) {
+    public PageImpl<List<ProductDto>> getProductsPagedHavvingTitleContaining(@RequestParam String title, @RequestParam Integer page, @RequestParam Integer size) {
         Page<List<Product>> productsPaginated = productService.getProductsPagedHavvingTitleContaining(title, page, size);
+        ArrayList<ProductDto> productDtos = new ArrayList<>();
+        var content = productsPaginated.getContent();
+        for (Object products : content) {
+            productDtos.add(fromProduct((Product) products));
+        }
+        Pageable pageable = productsPaginated.getPageable();
+        return new PageImpl(productDtos, pageable, productsPaginated.getTotalElements());
+    }
+
+    @GetMapping("/search")
+    public PageImpl<List<ProductDto>> searchProducts(@RequestParam String query,@RequestParam Integer page, @RequestParam Integer size) {
+        Page<List<Product>> productsPaginated = productService.searchProducts(query, page, size);
         ArrayList<ProductDto> productDtos = new ArrayList<>();
         var content = productsPaginated.getContent();
         for (Object products : content) {

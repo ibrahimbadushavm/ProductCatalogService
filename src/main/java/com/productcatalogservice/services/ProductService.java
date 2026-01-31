@@ -23,4 +23,6 @@ public interface ProductService {
     public Optional<Product> deleteProduct(Long productId) throws NotFoundException;
 
     public Page<List<Product>> getProductsPagedHavvingTitleContaining(String title, Integer page, Integer size);
+
+    public Page<List<Product>> searchProducts(String query,Integer page, Integer size);
 }
