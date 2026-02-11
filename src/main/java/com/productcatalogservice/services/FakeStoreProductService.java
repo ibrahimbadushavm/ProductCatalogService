@@ -18,7 +18,7 @@ public class FakeStoreProductService implements ProductService {
 
     private FakeStoreApiClient fakeStoreApiClient;
     @Autowired
-    private RedisTemplate<Long, Object> productsRedisTemplate;
+    private RedisTemplate<String, Object> productsRedisTemplate;
 
     public FakeStoreProductService(FakeStoreApiClient fakeStoreApiClient) {
         this.fakeStoreApiClient = fakeStoreApiClient;
@@ -38,41 +38,41 @@ public class FakeStoreProductService implements ProductService {
 
     @Override
     public Optional<Product> getProductById(Long id) throws NotFoundException {
-        if(productsRedisTemplate.opsForHash().hasKey(id, "PRODUCT")) {
+        if (productsRedisTemplate.opsForHash().hasKey("PRODUCT", "PRODUCT_" + id)) {
 
-            return Optional.of((Product) productsRedisTemplate.opsForHash().get(id, "PRODUCT"));
+            return Optional.of((Product) productsRedisTemplate.opsForHash().get("PRODUCT", "PRODUCT_" + id));
         }
         FakeStoreProductDto productDto = fakeStoreApiClient.getProductById(id);
-        if(productDto == null) {
-            throw new NotFoundException("Product not found with productId "+id);
+        if (productDto == null) {
+            throw new NotFoundException("Product not found with productId " + id);
         }
-        productsRedisTemplate.opsForHash().put(id, "PRODUCT",fromFakeStoreProductDto(productDto));
-        return Optional.of(fromFakeStoreProductDto(productDto)) ;
+        productsRedisTemplate.opsForHash().put("PRODUCT", "PRODUCT_" + id, fromFakeStoreProductDto(productDto));
+        return Optional.of(fromFakeStoreProductDto(productDto));
     }
 
     @Override
     public Product addProduct(Product product) {
-        FakeStoreProductDto fakeStoreProductDto= fakeStoreApiClient.addProduct(fromProduct(product));
+        FakeStoreProductDto fakeStoreProductDto = fakeStoreApiClient.addProduct(fromProduct(product));
         return fromFakeStoreProductDto(fakeStoreProductDto);
     }
 
     @Override
     public Product updateProduct(Long productId, Product product) {
-        FakeStoreProductDto fakeStoreProductDto= fakeStoreApiClient.updateProduct(productId,fromProduct(product));
+        FakeStoreProductDto fakeStoreProductDto = fakeStoreApiClient.updateProduct(productId, fromProduct(product));
         return fromFakeStoreProductDto(fakeStoreProductDto);
     }
 
     @Override
     public Product replaceProduct(Long productId, Product product) {
-        FakeStoreProductDto fakeStoreProductDto= fakeStoreApiClient.replaceProduct(productId,fromProduct(product));
+        FakeStoreProductDto fakeStoreProductDto = fakeStoreApiClient.replaceProduct(productId, fromProduct(product));
         return fromFakeStoreProductDto(fakeStoreProductDto);
     }
 
     @Override
     public Optional<Product> deleteProduct(Long productId) throws NotFoundException {
-        FakeStoreProductDto fakeStoreProductDto= fakeStoreApiClient.deleteProduct(productId);
-        if(fakeStoreProductDto == null) {
-            throw new NotFoundException("Product not found with productId "+productId);
+        FakeStoreProductDto fakeStoreProductDto = fakeStoreApiClient.deleteProduct(productId);
+        if (fakeStoreProductDto == null) {
+            throw new NotFoundException("Product not found with productId " + productId);
         }
         return Optional.of(fromFakeStoreProductDto(fakeStoreProductDto));
     }
@@ -83,7 +83,7 @@ public class FakeStoreProductService implements ProductService {
     }
 
     @Override
-    public Page<List<Product>> searchProducts(String query,Integer page, Integer size) {
+    public Page<List<Product>> searchProducts(String query, Integer page, Integer size) {
         return null;
     }
 

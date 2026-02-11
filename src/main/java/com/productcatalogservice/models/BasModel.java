@@ -7,12 +7,13 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.Id;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Setter
 @Getter
 @MappedSuperclass
-public abstract class BasModel {
+public abstract class BasModel implements Serializable {
     @Id
     @jakarta.persistence.Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
