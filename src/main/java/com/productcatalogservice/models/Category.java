@@ -22,6 +22,6 @@ public class Category  extends  BasModel {
     private String name;
     @OneToMany(mappedBy = "category",fetch = FetchType.LAZY,cascade ={ CascadeType.REMOVE})
     @org.springframework.data.annotation.ReadOnlyProperty
-    @org.springframework.data.elasticsearch.annotations.Field(enabled = false)
+//    @org.springframework.data.elasticsearch.annotations.Field(enabled = false)
     private List<Product> products;
 }
